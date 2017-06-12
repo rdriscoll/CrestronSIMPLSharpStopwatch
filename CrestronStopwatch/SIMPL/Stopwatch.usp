@@ -1,0 +1,78 @@
+/*******************************************************************************************
+rdriscoll@avplus.net.au
+20160603 v0.1 RRD
+*******************************************************************************************
+  Compiler Directives
+*******************************************************************************************/
+#USER_SIMPLSHARP_LIBRARY "StopwatchWithTimer"
+#CATEGORY "13" // Timers
+#DEFAULT_VOLATILE
+#define_constant MAX_LAPS 5
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+*******************************************************************************************/
+digital_input Start, Stop, Lap, Reset_Timer;
+digital_input Second_up, Second_down, Minute_up, Minute_down, Hour_up, Hour_down;
+digital_output Start_Fb, Stop_Fb, Countdown_done_Fb;
+string_output Stopwatch_txt, Countdown_txt, Last_Lap_txt, Lap_txt[MAX_LAPS];
+/*******************************************************************************************
+  Global Variables
+*******************************************************************************************/
+StopwatchWithTimer oStopwatch;
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/
+
+function Init() {
+	RegisterEvent(oStopwatch,StopwatchFb,evStopwatch);
+	RegisterEvent(oStopwatch,CountdownFb,evCountdown);
+	RegisterEvent(oStopwatch,LapFb,evLap);
+	RegisterEvent(oStopwatch,StopwatchRunningFb,evStopwatchRunning);
+	RegisterEvent(oStopwatch,CountdownRunningFb,evCountdownRunning);
+	oStopwatch.ShowSplitSeconds(1);
+}
+
+eventhandler evStopwatch(StopwatchWithTimer sender, TimerEventArgs args) {
+	Stopwatch_txt = args.str;
+}
+eventhandler evCountdown(StopwatchWithTimer sender, TimerEventArgs args) {
+	Countdown_txt = args.str;
+}
+eventhandler evLap(StopwatchWithTimer sender, TimerEventArgs args) {
+	Last_lap_txt = args.str;
+	if(args.index <= MAX_LAPS && IsSignalDefined(Lap_txt[args.index]))
+		Lap_txt[args.index] = args.str;
+}
+eventhandler evStopwatchRunning(StopwatchWithTimer sender, BoolEventArgs args) {
+	Start_Fb =  args.val;
+	Stop_Fb  = !args.val;
+}
+eventhandler evCountdownRunning(StopwatchWithTimer sender, BoolEventArgs args) {
+	if(!args.val)
+		pulse(1, Countdown_done_Fb);
+}
+/*******************************************************************************************
+  Event Handlers
+*******************************************************************************************/
+push Start       { oStopwatch.StartStopwatch(); } 
+push Stop        { oStopwatch.Stop(); }
+push Lap         { oStopwatch.Lap(); }
+push Reset_Timer { oStopwatch.Reset(); }
+push Second_up   { oStopwatch.SecondsUp(); } 
+push Second_down { oStopwatch.SecondsDown(); } 
+push Minute_up   { oStopwatch.MinutesUp(); } 
+push Minute_down { oStopwatch.MinutesDown(); } 
+push Hour_up     { oStopwatch.HoursUp(); } 
+push Hour_down   { oStopwatch.HoursDown(); } 
+
+/*******************************************************************************************
+  Main()
+*******************************************************************************************/
+Function Main() {
+	Init();
+	WaitForInitializationComplete();
+	oStopwatch.maxLaps = MAX_LAPS;
+	oStopwatch.countdownSeconds = 300;
+	oStopwatch.Reset();
+}
+
