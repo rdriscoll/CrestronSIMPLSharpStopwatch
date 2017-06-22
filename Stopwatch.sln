@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrestronStopwatchWithTimer", "CrestronStopwatch\CrestronStopwatchWithTimer.csproj", "{5475AC9E-8ABB-4019-9E01-5C645EA34181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpStopwatchWinForm", "CSharpStopwatch\Stopwatch\CSharpStopwatchWinForm.csproj", "{80DEE035-A1CE-4444-BBDE-51CCBEBC5B1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpStopwatchWinForm", "CSharpStopwatch\CSharpStopwatchWinForm.csproj", "{80DEE035-A1CE-4444-BBDE-51CCBEBC5B1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
